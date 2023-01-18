@@ -208,7 +208,7 @@ def gettingGameID(cursor, homeTeam, awayTeam, date):
 
 
 def main():
-    driver = webdriver.Chrome("C:/Sportsbooks/venv/Scripts/chromedriver.exe")
+    driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe")
 
 
     db = mysql.connector.connect(
