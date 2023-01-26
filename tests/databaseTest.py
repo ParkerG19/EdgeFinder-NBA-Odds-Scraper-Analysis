@@ -12,5 +12,4 @@ db = mysql.connector.connect(
 
 mycursor = db.cursor()
 
-mycursor.execute("CREATE TABLE matchups (gameID INT, date DATE, time VARCHAR(255),awayTeam VARCHAR(255),homeTeam VARCHAR(255))")
-
+mycursor.execute('TRUNCATE spreads')

@@ -11,22 +11,23 @@ from importantInfo import databaseRet
 from datetime import *
 
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="Gocubsgo19!!!",
-    database="oddsDB"
-)
 
-mycursor = db.cursor()
+# db = mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     passwd="Gocubsgo19!!!",
+#     database="oddsDB"
+# )
+#
+# mycursor = db.cursor()
 
 
 
 class FanDuel():
 
-    def __init__(self, driver):
+    def __init__(self):
 
-        self.driver = driver
+
         # These are the xpaths for the popular page goes in order of away team spread, odds, moneyline, over, odds, and then
         # home team spread, odds, moneyline, under, odds
         self.popularLiveX = ["//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span",  # Away Team Name
@@ -72,25 +73,25 @@ class FanDuel():
             return 0
         return 1
 
-    def popular(self, url):
+    def popular(self, url, driver, db):
 
-        self.driver.get(url)
-
+        cursor = db.cursor()
+        driver.get(url)
+        print("we are here")
         # This should open the inspector page - which I think needs to happen in order to load the elements that are
         # on the page - because the page is dynamic. I am not seeing the inspector open - but it doesn't seem like it
         # has to on this computer - it may have to on my laptop becuase that is where I learned that this was a solution
         # to not being able to find the elements that are on the page
-        ActionChains(self.driver).send_keys(Keys.F12)
 
         # Don't want to use all of the try loops if I don't have to. I can append to a list and make a dataframe from that information
-        isItLive = self.live(self.driver)
+        isItLive = self.live(driver)
 
         # dataList will contain all of the information that is gathered from the 'popular' page including the
         # team name, spread, spread odds, moneyline, over, over odds,..... etc - and in that order; starting with the away team
         dataList = []
 
         #TESTING PURPOSES
-        print(isItLive)
+        #print(isItLive)
 
         # Checking to see if the game is live - as that will determine the xpath that I am using
         # After checking to see if it is live - trys to find element and appends to list if it is found
@@ -100,7 +101,7 @@ class FanDuel():
 
             for i in range(len(self.popularLiveX)):
                     try:
-                        data = self.driver.find_element_by_xpath(self.popularLiveX[i]).get_attribute("innerHTML")
+                        data = driver.find_element_by_xpath(self.popularLiveX[i]).get_attribute("innerHTML")
                         dataList.append(data)
                     except NoSuchElementException:
                         dataList.append("NA")
@@ -108,56 +109,71 @@ class FanDuel():
         else:
             for i in range(len(self.popularPreGameX)):
                     try:
-                        data = self.driver.find_element_by_xpath(self.popularPreGameX[i]).get_attribute("innerHTML")
+                        data = driver.find_element_by_xpath(self.popularPreGameX[i]).get_attribute("innerHTML")
                         dataList.append(data)
                     except NoSuchElementException:
                         dataList.append("NA")
 
         # Utilizing a custom created package in order to retrieve the correct gameID for this specific game
-        gameID = matchups.gettingGameID(mycursor, dataList[6], dataList[0], str(date.today()))
+        gameID = matchups.gettingGameID(cursor, dataList[6], dataList[0], str(date.today()))
 
         # adding the data into their appropriate database tables
 
-        # This is the spread date that needs to be inserted
+        # This is the spread data that needs to be inserted
         sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds) VALUES (%s, %s, %s, %s)"
         val = (dataList[0], gameID, dataList[1], dataList[2])
-        mycursor.execute(sql, val)
+        cursor.execute(sql, val)
         db.commit()
 
         sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds) VALUES (%s, %s, %s, %s)"
         val = (dataList[6], gameID, dataList[7], dataList[8])
-        mycursor.execute(sql, val)
+        cursor.execute(sql, val)
         db.commit()
 
         # Inserting the moneyline data for the teams
         sql = "INSERT INTO moneyline (gameID, homeTeamMoney, awayTeamMoney) VALUES (%s, %s, %s)"
         val = (gameID, dataList[9], dataList[3])
-        mycursor.execute(sql, val)
+        cursor.execute(sql, val)
         db.commit()
 
         # Inserting into the overunder table
         sql = "INSERT INTO overunder (gameID, fdOver, fdOverOdds, fdUnder, fdUnderOdds) VALUES (%s, %s, %s, %s, %s)"
         val = (gameID, dataList[4], dataList[5], dataList[10], dataList[11])
-        mycursor.execute(sql, val)
+        cursor.execute(sql, val)
 
 
-def main():
-    driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe")
+# def main():
+#     start = datetime.now()
+#     options = webdriver.ChromeOptions()
+#     options.add_argument("--auto-open-devtools-for-tabs")
+#     # after being tested - headless browser proves to be 2x the speed of non headeless browser
+#     options.headless = True
+#     driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe", options=options)
+#
+#     # getting the list of basketball game url's and adding them to csv file to be accessed by functions
+#     urlList = databaseRet.gettingURL(db, mycursor)
+#
+#
+#
+#
+#     page = FanDuel(driver)
+#     for i in range(len(urlList)):
+#         popularPages = page.popular(urlList[i])
+#         #print(popularPages)    # THIS PRINT STATEMENT IS WHAT WIL PRINT THE NONE VALUE
+#
+#     end = datetime.now()
+#
+#     totalTime = end - start
+#     print("total time: " + str(totalTime))
+# if __name__ == "__main__":
+#     main()
 
-    # getting the list of basketball game url's and adding them to csv file to be accessed by functions
-    urlList = databaseRet.gettingURL(db, mycursor)
 
+    # IDEA - SPLITTING THE NUMBER OF URLS INTO DIFFERENT THREADS. NOT JUST ONE WEBSITE TO ANOTHER - BUT INSTEAD A
+    # DIFFERENT THREAD FOR HALF URLS ON FANDUEL AND SAME FOR OTHER SITES. THIS WAY IT WOULD BE MUCH FASTER.
+    # TOTAL TIME IN HEADLESS BROWSER ON 1/18 IS 48 SECONDS. THERE ARE 9 GAMES. 5.3 SECONDS PER GAME
 
-
-
-    page = FanDuel(driver)
-    for i in range(len(urlList)):
-        popularPages = page.popular(urlList[i])
-        #print(popularPages)    # THIS PRINT STATEMENT IS WHAT WIL PRINT THE NONE VALUE
-
-
-if __name__ == "__main__":
-    main()
+    
 
 
 

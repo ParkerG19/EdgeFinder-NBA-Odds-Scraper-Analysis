@@ -126,7 +126,7 @@ def gettingGameID(cursor, homeTeam, awayTeam, date):
     # in the form of a tuple, and we only want to retrieve the actual value of the
     # the gameID - so this result will be returned
     for results in result:
-        print(results[0])
+        #print(results[0])
         return results[0]
 
 # """
