@@ -76,4 +76,3 @@ def timeConverter2(date):
     return newDate
 
 
-print(timeConverter2("Tue, Dec 27, 2022"))
