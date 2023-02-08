@@ -25,8 +25,9 @@ mycursor = db.cursor()
 
 
 
-list = databaseRet.gettingURL(db, mycursor)
+#query = "ALTER TABLE matchups RENAME COLUMN url TO fdURL"
 
-print(list[len(list) - 1])
+query = "ALTER TABLE matchups ADD COLUMN dfURL VARCHAR(255) AFTER fdURL"
+mycursor.execute(query)
 
 

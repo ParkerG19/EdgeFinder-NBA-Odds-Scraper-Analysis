@@ -12,7 +12,7 @@ from datetime import *
 
 driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe")
 
-fd1 = fd.FanDuel(driver)
+fd1 = fd.FanDuel()
 
 db = mysql.connector.connect(
     host="localhost",
@@ -75,7 +75,7 @@ def gettingMatchupURL(driver, cursor, db):
 
     # Creating fanduel basketball object - because this function must check if a game is live or not to decide
     # what needs to be done
-    fd1 = fd.FanDuel(driver)
+    fd1 = fd.FanDuel()
 
     gameURLlist = []
     gameIDList = []
