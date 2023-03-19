@@ -11,6 +11,9 @@ being able to compare the names
 
 def nameConverter(name):
 
+    if name == "NA":
+        fullName = "NA"
+        return fullName
 
     abbreviationList = ["ATL Hawks", "BOS Celtics", "BKN Nets", "CHA Hornets", "CHI Bulls", "CLE Cavaliers", "DET Pistons",
                         "GS Warriors", "IND Pacers", "LA Lakers", "MIA Heat", "NO Pelicans", "NY Knicks", "OKC Thunder",
@@ -24,9 +27,12 @@ def nameConverter(name):
                     "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards", "Dallas Mavericks",
                     "Denver Nuggets", "Houston Rockets", "Los Angeles Clippers", "Memphis Grizzlies", "Milwaukee Bucks",
                     "Minnesota Timberwolves", "Philadelphia 76ers"]
-
-    indexOfName = abbreviationList.index(name)
-
+    indexOfName = 0
+    try:
+        indexOfName = abbreviationList.index(name)
+    except ValueError:
+        print("That value is not here ( trying to convert the team names ) " + str(abbreviationList.index(name)))
+        fullName = "NA"
     fullName = fullNameList[indexOfName]
 
     return fullName

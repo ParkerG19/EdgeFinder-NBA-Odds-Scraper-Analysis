@@ -23,7 +23,7 @@ def getMatchups(driver, cursor, db):
 
     dateList, timeList, awayTeamList, homeTeamList = [], [], [], []
     #for i in range(len(monthExtensions)):
-    driver.get("https://www.basketball-reference.com/leagues/NBA_2023_games-february.html")
+    driver.get("https://www.basketball-reference.com/leagues/NBA_2023_games-march.html")
 
     # THE DATE BUTTON NEEDS TO BE CLICKED PRIOR TO THE DATA BEING SCRAPED - OTHERQIZE , NOT ALL OF THE DATA CAN BE RETRIEIVED
 

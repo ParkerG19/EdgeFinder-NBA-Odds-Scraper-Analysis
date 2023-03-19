@@ -13,21 +13,30 @@ import mysql.connector
 
 
 
+#
+# db = mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     passwd="Gocubsgo19!!!",
+#     database="oddsDB"
+# )
+#
+# mycursor = db.cursor()
+#
+#
+#
+# #query = "ALTER TABLE matchups RENAME COLUMN url TO fdURL"
+#
+# query = "ALTER TABLE matchups ADD COLUMN dfURL VARCHAR(255) AFTER fdURL"
+# mycursor.execute(query)
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="Gocubsgo19!!!",
-    database="oddsDB"
-)
 
-mycursor = db.cursor()
+draftKingsString = "https://sportsbook.draftkings.com"
 
+url = "https://sportsbook.draftkings.com/leagues/basketball/nba"
 
+if draftKingsString in url:
+    print("this is working")
 
-#query = "ALTER TABLE matchups RENAME COLUMN url TO fdURL"
-
-query = "ALTER TABLE matchups ADD COLUMN dfURL VARCHAR(255) AFTER fdURL"
-mycursor.execute(query)
 
 

@@ -104,6 +104,9 @@ class FanDuel():
                         data = driver.find_element_by_xpath(self.popularLiveX[i]).get_attribute("innerHTML")
                         dataList.append(data)
                     except NoSuchElementException:
+                        driver.save_screenshot('screen_shot.png')
+
+                        print("Unable to find the element")
                         dataList.append("NA")
 
         else:
@@ -112,6 +115,9 @@ class FanDuel():
                         data = driver.find_element_by_xpath(self.popularPreGameX[i]).get_attribute("innerHTML")
                         dataList.append(data)
                     except NoSuchElementException:
+                        driver.save_screenshot('screen_shot.png')
+
+                        print("Unable to find the element")
                         dataList.append("NA")
 
         # Utilizing a custom created package in order to retrieve the correct gameID for this specific game
@@ -120,27 +126,30 @@ class FanDuel():
         # adding the data into their appropriate database tables
 
         # This is the spread data that needs to be inserted
-        sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds) VALUES (%s, %s, %s, %s)"
-        val = (dataList[0], gameID, dataList[1], dataList[2])
+        sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds,  timeTaken) VALUES (%s, %s, %s, %s, %s)"
+        val = (dataList[0], gameID, dataList[1], dataList[2], datetime.now())
         cursor.execute(sql, val)
         db.commit()
 
-        sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds) VALUES (%s, %s, %s, %s)"
-        val = (dataList[6], gameID, dataList[7], dataList[8])
+        sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds, timeTaken) VALUES (%s, %s, %s, %s, %s)"
+        val = (dataList[6], gameID, dataList[7], dataList[8], datetime.now())
         cursor.execute(sql, val)
         db.commit()
 
         # Inserting the moneyline data for the teams
-        sql = "INSERT INTO moneyline (gameID, homeTeamMoney, awayTeamMoney) VALUES (%s, %s, %s)"
-        val = (gameID, dataList[9], dataList[3])
+        sql = "INSERT INTO moneyline (gameID, homeTeamMoney, awayTeamMoney, timeTaken) VALUES (%s, %s, %s, %s)"
+        val = (gameID, dataList[9], dataList[3], datetime.now())
         cursor.execute(sql, val)
         db.commit()
 
         # Inserting into the overunder table
-        sql = "INSERT INTO overunder (gameID, fdOver, fdOverOdds, fdUnder, fdUnderOdds) VALUES (%s, %s, %s, %s, %s)"
-        val = (gameID, dataList[4], dataList[5], dataList[10], dataList[11])
+        sql = "INSERT INTO overunder (gameID, fdOver, fdOverOdds, fdUnder, fdUnderOdds, timeTaken) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (gameID, dataList[4], dataList[5], dataList[10], dataList[11], datetime.now())
         cursor.execute(sql, val)
+        db.commit()
 
+
+        driver.close()
 
 # def main():
 #     start = datetime.now()

@@ -1,4 +1,5 @@
 from Basketball import FanDuel
+from Basketball import DraftKings
 from selenium import webdriver
 import mysql.connector
 from importantInfo import matchups
@@ -9,7 +10,8 @@ import concurrent.futures
 from concurrent.futures import wait
 import pandas as pd
 from selenium.common.exceptions import NoSuchElementException
-
+import time as t
+import random
 
 
 start = datetime.now()
@@ -48,7 +50,21 @@ start = datetime.now()
 def makingDrivers():
     options = webdriver.ChromeOptions()
     options.add_argument("--auto-open-devtools-for-tabs")
-    options.headless = True
+    # options.headless = True
+
+    options.add_argument("--headless=new")
+    options.add_argument("--window-size=974,1040")
+
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--allow-running-insecure-content')
+    # Adding argument to disable the AutomationControlled flag
+    options.add_argument("--disable-blink-features=AutomationControlled")
+
+    # Exclude the collection of enable-automation switches
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+
+    # Turn-off userAutomationExtension 
+    options.add_experimental_option("useAutomationExtension", False)
 
     driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe", options=options)
 
@@ -141,16 +157,39 @@ def databaseConn():
 
 connection = databaseConn()
 db = connection
-urlList = databaseRet.gettingURL(db, db.cursor())
+
+
+urlList = databaseRet.gettingURLfd(db, db.cursor())
+urlList2 = databaseRet.gettingURLdk(db, db.cursor())
+
+allURLS = urlList + urlList2
+
+
+
+draftKingsString = "https://sportsbook.draftkings.com"
+fanduelString = "https://sportsbook.fanduel.com"
 
 threads = []
 fd = FanDuel.FanDuel()
+dk = DraftKings.draftKings()
 
-for urls in urlList:
+for urls in allURLS:
+
+    # I used this random to imitate more a human - it slows down the program - unsure at this point if it is necessary
+    randomNum = random.randint(1,8)
+    t.sleep(randomNum)
+
     print("Making thread")
     driver = makingDrivers()
     db = databaseConn()
-    thread1 = threading.Thread(target=fd.popular, args=(urls, driver, db))
+    # This is used to work with the fanduel - testing purposes are only testing one website at a time
+    if fanduelString in urls:
+        t.sleep(randomNum)
+        thread1 = threading.Thread(target=fd.popular, args=(urls, driver, db))
+    # This is used to work with teh draftkings = testing purposes are only testing one website at a time
+    else:
+        thread1 = threading.Thread(target=dk.popularMarkets, args= (urls, driver, db))
+
     threads.append(thread1)
     thread1.start()
 

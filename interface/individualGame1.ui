@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>IndividualGames</class>
+ <widget class="QMainWindow" name="IndividualGames">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>605</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPlainTextEdit" name="plainTextEdit">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>70</y>
+      <width>311</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="plainText">
+     <string>This is for the individual games - to show their history
+</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>140</y>
+      <width>381</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>100</width>
+      <height>100</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>711</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="alternatingRowColors">
+     <bool>true</bool>
+    </property>
+    <row>
+     <property name="text">
+      <string>Away Team </string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Home Team</string>
+     </property>
+    </row>
+    <column>
+     <property name="text">
+      <string>Spread</string>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>MoneyLine</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Over/Under</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </column>
+    <item row="0" column="0">
+     <property name="text">
+      <string>Away Team Spread</string>
+     </property>
+    </item>
+    <item row="0" column="1">
+     <property name="text">
+      <string>Away Team Money</string>
+     </property>
+    </item>
+    <item row="0" column="2">
+     <property name="text">
+      <string>Over</string>
+     </property>
+    </item>
+    <item row="1" column="0">
+     <property name="text">
+      <string>Home Team Spread</string>
+     </property>
+    </item>
+    <item row="1" column="1">
+     <property name="text">
+      <string>Home Team MoneyLine</string>
+     </property>
+    </item>
+    <item row="1" column="2">
+     <property name="text">
+      <string>Under</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>FanDuel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>270</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>DraftKings</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>300</y>
+      <width>381</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <row>
+     <property name="text">
+      <string>Away Team</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Home Team</string>
+     </property>
+    </row>
+    <column>
+     <property name="text">
+      <string>Spread</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>MoneyLine</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Over/Under</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <item row="0" column="0">
+     <property name="text">
+      <string>dkAway Team Spread</string>
+     </property>
+    </item>
+    <item row="0" column="1">
+     <property name="text">
+      <string>dkAwayTeamMoney</string>
+     </property>
+    </item>
+    <item row="0" column="2">
+     <property name="text">
+      <string>dkOver</string>
+     </property>
+    </item>
+    <item row="1" column="0">
+     <property name="text">
+      <string>DkHomeTeamSpread</string>
+     </property>
+    </item>
+    <item row="1" column="1">
+     <property name="text">
+      <string>dkHomeTeamMoney</string>
+     </property>
+    </item>
+    <item row="1" column="2">
+     <property name="text">
+      <string>dkUnder</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

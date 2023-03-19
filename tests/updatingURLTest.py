@@ -27,13 +27,14 @@ driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe", options=
 
 
 
+#   THESE ARE THE THINGS THAT NEED TO BE RUN AT THE SAME TIME AND ON SOME SORT OF SCHEDULE
 upd.updateURLdk(mycursor, driver, db)
-
+#upd.updateURL(mycursor, driver, db)
 
 """
 Checking to make sure that the gettingMatchupURL is working for the draftkings function version
 """
-
+driver.close()
 # options = webdriver.ChromeOptions()
 # options.add_argument("--auto-open-devtools-for-tabs")
 # # setting the window size allows interaction with the web page when it is in headless mode
