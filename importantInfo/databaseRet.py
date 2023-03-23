@@ -31,3 +31,4 @@ def gettingURLdk(db, cursor):
         urlList.append(str(results))
 
     return urlList
+

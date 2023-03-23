@@ -122,3 +122,12 @@ def gettingOverUnder(gameID):
 
 
 
+def gettingGameDate(gameID):
+    # this query will get the date the game is supposed to take place
+    query = "SELECT date FROM matchups WHERE gameID = %s"
+
+    vals = (gameID,)
+    mycursor.execute(query, vals)
+    date = mycursor.fetchall()
+
+    print(date)
