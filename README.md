@@ -28,7 +28,7 @@ late October -> June of the next year. That is the regular season and playoffs f
 
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-    <img src="image1_url" alt="how_to_step1" width="400">
-    <img src="image2_url" alt="how_to_step2" width="250">
-    <img src="image3_url" alt="how_to_step3" width="250">
+    <img width="250" alt="how_to_step1" src="https://github.com/ParkerG19/EdgeFinder-NBA-Odds-Scraper-Analysis/assets/36928533/34a47d0d-adec-4020-98b8-0fde5b5d1f24">
+    <img width="250" alt="how_to_step2" src="https://github.com/ParkerG19/EdgeFinder-NBA-Odds-Scraper-Analysis/assets/36928533/4247628d-e9ef-475d-b028-86af67706d05">
+    <img width="250" alt="how_to_step3" src="https://github.com/ParkerG19/EdgeFinder-NBA-Odds-Scraper-Analysis/assets/36928533/8a3e1cce-4dde-4ad3-a28e-98414fbf46af">
 </div>
