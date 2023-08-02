@@ -1,6 +1,13 @@
 from datetime import *
 
 
+"""
+This function will take in a database connection and the corresponding cursor
+and query the database for URL's that will be currently available on fanduel
+
+A URL is considered available if it not NULL and the date is the current date
+or later. This way it would not get anything for games in the past
+"""
 
 def gettingURLfd(db, cursor):
     # This query is used to get the fanduel URLS
@@ -16,6 +23,13 @@ def gettingURLfd(db, cursor):
 
     return urlList
 
+"""
+This function will take in a database connection and the corresponding cursor
+and query the database for URL's that will be currently available on draftKings
+
+A URL is considered available if it not NULL and the date is the current date
+or later. This way it would not get anything for games in the past
+"""
 
 def gettingURLdk(db, cursor):
 

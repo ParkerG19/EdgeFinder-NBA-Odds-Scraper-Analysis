@@ -9,6 +9,7 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from importantInfo import ConvertingsTeamName as convert
+from selenium.webdriver.common.by import By
 
 
 
@@ -34,8 +35,6 @@ def updateURL(cursor, driver, db):
 
     for i in range(len(listOfURLs)):
 
-
-
         # THIS QUERY WILL CHECK FOR THAT SPECIFIC GAME ID AND WHETHER THE URL FIELD IS NULL - DETERMINING WHAT TO DO NEXT
         checkNullQuery = "SELECT * FROM matchups WHERE gameID = %s AND fdURL IS NULL"  # it wll be a random gameID that is being given to the database
         value = (listOfGameID[i])  # This will be the variable of gameID - that is retrieved via a function
@@ -52,9 +51,6 @@ def updateURL(cursor, driver, db):
             print("No need to insert a value " + listOfURLs[i])
 
 
-# COPIED THIS FUNCTION IN FROM 'MATCHUPS.PY' - I THINK THAT IT BELONGS BETTER HERE, AND IT
-# HELPS GET RID OF ANY DOUBLE DEPENDENCIES THAT THERE WERE INVOLVING FANDUEL.PY  ----- THIS CHANGE HAS BEEN
-# PARTIALLY IMPLEMENTED - BUT NO TESTS HAVE BEEN RUN TO SEE THE FUNCTIONALITY
 """
 This function will be capable of retrieving the link to each game that is available on FANDUEL
 It will find and scrape the game URL (as all games are unique each day) - and it will then utilize
@@ -65,42 +61,50 @@ IMPORTANT - THIS ONLY WORKS ON FANDUEL, OTHER SPORTSBOOKS NEED THEIR OWN
 """
 def gettingMatchupURL(driver, cursor, db):
     driver.get("https://sportsbook.fanduel.com/navigation/nba?tab=games")  # this can be edited as need be - especially for scale of program - if other sports were to be added - corresponding info would need changed as well
-    #driver.maximize_window()
+    # This will get all the games from the main directory URL
     allLinks = driver.find_elements(By.CSS_SELECTOR, "a[href*='/basketball/nba']")  # list of all links that were found
 
     # Creating fanduel basketball object - because this function must check if a game is live or not to decide
     # what needs to be done
     fd1 = fd.FanDuel()
 
+    #Creating empty lists to be filled up later in script
     gameURLlist = []
     gameIDList = []
+
     for i in range(1, len(allLinks), 2):        # Each link is found twice - that is the reason for the incrementation
 
         allLinks = driver.find_elements(By.CSS_SELECTOR, "a[href*='/basketball/nba']")
-        allLinks[i].click()
+        t.sleep(5)
+        clickable = False
+        while clickable is False:
+            try:
+                allLinks[i].click()
+                clickable=True
+            except ElementClickInterceptedException:
+                driver.execute_script("window.scrollBy(0,250)","")
+        #allLinks[i].click()
         t.sleep(5)
 
         live = fd1.live(driver)
         if (live == 1):
             # This means that the game is live
             awayTeam = driver.find_element_by_xpath(
-                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span").get_attribute("innerHTML")
+                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span").get_attribute("innerHTML")
             homeTeam = driver.find_element_by_xpath(
-                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span").get_attribute("innerHTML")
+                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span").get_attribute("innerHTML")
 
 
         else:
-            awayTeam = driver.find_element_by_xpath(
-                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span").get_attribute("innerHTML")
+            awayTeam = driver.find_element(By.XPATH,
+                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span").get_attribute("innerHTML")
+            homeTeam = driver.find_element(By.XPATH,
+                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span").get_attribute("innerHTML")
 
-            homeTeam = driver.find_element_by_xpath(
-                "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span").get_attribute("innerHTML")
-
+        # calls matchups file function to get the game id for the team today
         gameID = matchups.gettingGameID(cursor, homeTeam, awayTeam, str(date.today()))  # Getting the gameID given the team names
 
         gameIDList.append(gameID)
-
-
         gameURLlist.append(driver.current_url)    # will not need this soon because of database implementation
         print(driver.current_url)
         driver.back()
@@ -138,8 +142,7 @@ def gettingMatchupURLdk(driver, cursor):
         allLinks = driver.find_elements(By.CLASS_NAME,"sportsbook-table__column-row")  # list of all links that were found
         clickableLinks = allLinks[::8]
 
-        #driver.execute_script("window.scrollBy(0,250)", "")
-        # t.sleep(2)
+
         clickable = False
         while clickable is False:
             try:

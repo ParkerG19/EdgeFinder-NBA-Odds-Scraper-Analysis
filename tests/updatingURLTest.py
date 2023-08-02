@@ -29,7 +29,7 @@ driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe", options=
 
 #   THESE ARE THE THINGS THAT NEED TO BE RUN AT THE SAME TIME AND ON SOME SORT OF SCHEDULE
 upd.updateURLdk(mycursor, driver, db)
-#upd.updateURL(mycursor, driver, db)
+upd.updateURL(mycursor, driver, db)
 
 """
 Checking to make sure that the gettingMatchupURL is working for the draftkings function version

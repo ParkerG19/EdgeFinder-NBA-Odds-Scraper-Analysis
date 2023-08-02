@@ -1,13 +1,14 @@
+"""
+This file only will be run one time in order to fill up the matchups table
+with the correct schedule for the season. The unique gameID is also given to
+each game as well. The ID is checked for its uniqueness as well.
+"""
+
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import mysql.connector
 from random import randint
 import time
-#import Basketball.FanDuel as fd
 from importantInfo import timeTranslator
 
 
@@ -22,8 +23,8 @@ def getMatchups(driver, cursor, db):
     monthExtensions = ['december', 'january', 'february', 'march', 'april', 'may', 'june']
 
     dateList, timeList, awayTeamList, homeTeamList = [], [], [], []
-    #for i in range(len(monthExtensions)):
-    driver.get("https://www.basketball-reference.com/leagues/NBA_2023_games-march.html")
+
+    driver.get("https://www.basketball-reference.com/leagues/NBA_2023_games-may.html")
 
     # THE DATE BUTTON NEEDS TO BE CLICKED PRIOR TO THE DATA BEING SCRAPED - OTHERQIZE , NOT ALL OF THE DATA CAN BE RETRIEIVED
 
@@ -114,14 +115,6 @@ def gettingGameID(cursor, homeTeam, awayTeam, date):
     cursor.execute(query, vals)
     result = cursor.fetchall()
 
-    # This should never occur if it is done correctly - as all games should be able to be found - but it is just a fail safe
-    # Will check if there are no results - meaning that it could not find this game in the matchups table
-    # if (len(result) == 0):
-    #     print("Could not find a game with "+ homeTeam + " as the home team and " + awayTeam + " as the away team")
-    # else:
-    #     print("Got Home team " + homeTeam + " and the away team as " + awayTeam)
-
-
     # Need to return the value this way because the query returns results of the query
     # in the form of a tuple, and we only want to retrieve the actual value of the
     # the gameID - so this result will be returned
@@ -129,100 +122,22 @@ def gettingGameID(cursor, homeTeam, awayTeam, date):
         #print(results[0])
         return results[0]
 
-# """
-# This function will be capable of retrieving the link to each game that is available on FanDuel
-# It will find and scrape the game URL (as all games are unique each day) - and it will then utilize
-# the function to get the gameID and append the URL to the 'matchups' table in the database - as long as
-# it doesn't already exist. This will be used by the main program in order to retrieve all data desired
-# """
-# def gettingMatchupURL(driver, cursor, db):
-#     driver.get("https://sportsbook.fanduel.com/navigation/nba")
-#     driver.maximize_window()
-#     allLinks = driver.find_elements(By.CSS_SELECTOR, "a[href*='/basketball/nba']")  # this indicates all the links that were found at the time of looking
-#
-#     fd1 = fd.FanDuel(driver)
-#
-#
-#
-#     gameURLlist = []
-#     gameIDList = []
-#     for i in range(1, len(allLinks), 2):        # Each link is found twice - that is the reason for the incrementation
-#
-#         allLinks = driver.find_elements(By.CSS_SELECTOR, "a[href*='/basketball/nba']")
-#         allLinks[i].click()
-#         time.sleep(5)
-#
-#         live = fd1.live(driver)
-#         if (live == 1):
-#             # This means that the game is live
-#             awayTeam = driver.find_element_by_xpath(
-#                 "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span").get_attribute("innerHTML")
-#             homeTeam = driver.find_element_by_xpath(
-#                 "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span").get_attribute("innerHTML")
-#
-#
-#         else:
-#             awayTeam = driver.find_element_by_xpath(
-#                 "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span").get_attribute("innerHTML")
-#
-#             homeTeam = driver.find_element_by_xpath(
-#                 "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span").get_attribute("innerHTML")
-#
-#         gameID = gettingGameID(cursor, homeTeam, awayTeam, "NO DATE NOW")  # Getting the gameID given the team names
-#
-#         gameIDList.append(gameID)
-#
-#
-#         gameURLlist.append(driver.current_url)    # will not need this soon because of database implementation
-#         driver.back()
-#         # time.sleep(3)
-#     return gameURLlist, gameIDList
-
-
-# DONT THINK THAT i USE THIS FUNCTION - BUT SAFER NOT TO COMPLETELY DELETE UNTIL 100% SURE
-# def addingURLs(driver, cursor, db):
-#
-#     # Need to get the name of the teams that are playing
-#     # I only want to update the database - if that game doesn't already have a URL there
-#     awayTeam = driver.find_element_by_xpath(
-#         "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[1]/div/div/div/div/span")
-#     homeTeam = driver.find_element_by_xpath(
-#         "//*[@id='main']/div/div[1]/div/div[2]/div[4]/ul/li[2]/div/div/div/div[3]/div/div/div[1]/div[3]/div/div/div/div/span")
-#     gameID = gettingGameID(cursor, homeTeam, awayTeam, "NO DATE NOW")  # Getting the gameID given the team names
-#
-#     # THIS
-#     # QUERY WILL CHECK FOR THAT SPECIFIC GAME ID AND WHETHER THE URL FIELD IS NULL - DETERMINING WHAT TO DO NEXT
-#     checkNullQuery = "SELECT * FROM matchups WHERE gameID = %s AND url IS NULL"  # it wll be a random gameID that is being given to the database
-#     value = (gameID)  # This will be the variable of gameID - that is retrieved via a function
-#     cursor.execute(checkNullQuery, (value,))
-#     result = cursor.fetchall()
-#
-#     updateQuery = "UPDATE matchups SET url = (%s) WHERE gameID = %s"
-#     values = ("testingURL",
-#               gameID)  # the first value here is what is being inserted and it is going at the location of the given gameID
-#     if (len(result) == 1):
-#         cursor.execute(updateQuery, values)
-#         db.commit()
-#     else:
-#         print("No need to insert a value")
-
 
 def main():
     driver = webdriver.Chrome("C:/ProjectV2/venv/Scripts/chromedriver.exe")
 
-
+    # NEEDS TO BE UPDATED WITH VALID CREDENTIALS
     db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        passwd="Gocubsgo19!!!",
-        database="oddsDB"
+        host="YOUR_HOST",
+        user="YOUR_USER",
+        passwd="YOUR_PASSWORD",
+        database="YOUR_DB_NAME"
     )
 
     mycursor = db.cursor()
 
     getMatchups(driver, mycursor, db)
 
-    #gettingMatchupURL(driver, mycursor)
 
 if __name__ == "__main__":
     main()

@@ -9,6 +9,7 @@ import mysql.connector
 from importantInfo import matchups
 from importantInfo import databaseRet
 from datetime import *
+import time
 
 
 
@@ -78,13 +79,6 @@ class FanDuel():
         cursor = db.cursor()
         driver.get(url)
         print("we are here")
-        # This should open the inspector page - which I think needs to happen in order to load the elements that are
-        # on the page - because the page is dynamic. I am not seeing the inspector open - but it doesn't seem like it
-        # has to on this computer - it may have to on my laptop becuase that is where I learned that this was a solution
-        # to not being able to find the elements that are on the page
-
-        # Don't want to use all of the try loops if I don't have to. I can append to a list and make a dataframe from that information
-        isItLive = self.live(driver)
 
         # dataList will contain all of the information that is gathered from the 'popular' page including the
         # team name, spread, spread odds, moneyline, over, over odds,..... etc - and in that order; starting with the away team
@@ -93,19 +87,19 @@ class FanDuel():
         #TESTING PURPOSES
         #print(isItLive)
 
+        # Will check if the game is live. If value is 1 then it is live. 0 Means it is not live
+        isItLive = self.live(driver)
         # Checking to see if the game is live - as that will determine the xpath that I am using
         # After checking to see if it is live - trys to find element and appends to list if it is found
         # if the element cannot be found - that means that the bet is not available - a "NA" value will be appended
         # to the list as that is the value that is put into the database
-        if (isItLive == 1):
 
-            for i in range(len(self.popularLiveX)):
+        if (isItLive == 1): # This means the game is live
+            for i in range(len(self.popularLiveX)): # Will loop through for the number of elements that want to be found
                     try:
                         data = driver.find_element_by_xpath(self.popularLiveX[i]).get_attribute("innerHTML")
                         dataList.append(data)
                     except NoSuchElementException:
-                        driver.save_screenshot('screen_shot.png')
-
                         print("Unable to find the element")
                         dataList.append("NA")
 
@@ -124,32 +118,35 @@ class FanDuel():
         gameID = matchups.gettingGameID(cursor, dataList[6], dataList[0], str(date.today()))
 
         # adding the data into their appropriate database tables
-
         # This is the spread data that needs to be inserted
         sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds,  timeTaken) VALUES (%s, %s, %s, %s, %s)"
-        val = (dataList[0], gameID, dataList[1], dataList[2], datetime.now())
+        val = (dataList[0], gameID, dataList[1], dataList[2], datetime.today())
         cursor.execute(sql, val)
         db.commit()
 
         sql = "INSERT INTO spreads (team, gameID, FDspread, FDspreadodds, timeTaken) VALUES (%s, %s, %s, %s, %s)"
-        val = (dataList[6], gameID, dataList[7], dataList[8], datetime.now())
+        val = (dataList[6], gameID, dataList[7], dataList[8], datetime.today())
         cursor.execute(sql, val)
         db.commit()
 
         # Inserting the moneyline data for the teams
         sql = "INSERT INTO moneyline (gameID, homeTeamMoney, awayTeamMoney, timeTaken) VALUES (%s, %s, %s, %s)"
-        val = (gameID, dataList[9], dataList[3], datetime.now())
+        val = (gameID, dataList[9], dataList[3], datetime.today())
         cursor.execute(sql, val)
         db.commit()
 
         # Inserting into the overunder table
         sql = "INSERT INTO overunder (gameID, fdOver, fdOverOdds, fdUnder, fdUnderOdds, timeTaken) VALUES (%s, %s, %s, %s, %s, %s)"
-        val = (gameID, dataList[4], dataList[5], dataList[10], dataList[11], datetime.now())
+        val = (gameID, dataList[4], dataList[5], dataList[10], dataList[11], datetime.today())
         cursor.execute(sql, val)
         db.commit()
 
-
         driver.close()
+        print("inserted the data")
+
+
+
+    #driver.close()
 
 # def main():
 #     start = datetime.now()
