@@ -27,6 +27,8 @@ The scraper will not scrape anythign in the off season - as the only data that g
 late October -> June of the next year. That is the regular season and playoffs for the NBA
 
 
-<img width="250" alt="how_to_step1" src="https://github.com/ParkerG19/EdgeFinder-NBA-Odds-Scraper-Analysis/assets/36928533/3f4b8344-bca5-48a9-a64c-38adae4711d9">
-<img width="250" alt="how_to_step2" src="https://github.com/ParkerG19/EdgeFinder-NBA-Odds-Scraper-Analysis/assets/36928533/682fd363-0a1c-4e20-b416-dad36fd7208f">
-<img width="250" alt="how_to_step3" src="https://github.com/ParkerG19/EdgeFinder-NBA-Odds-Scraper-Analysis/assets/36928533/f32b2fbc-9ef3-4537-a04a-f33060f6823e">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+    <img src="image1_url" alt="how_to_step1" width="400">
+    <img src="image2_url" alt="how_to_step2" width="250">
+    <img src="image3_url" alt="how_to_step3" width="250">
+</div>
